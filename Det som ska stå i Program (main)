@@ -1,0 +1,6 @@
+using Memory_game;
+
+Introduction start = new Introduction();
+IPlayer[] player = start.ChoiceOfGame();
+InitiateGame startGame = new InitiateGame(player);
+startGame.Initiate();
