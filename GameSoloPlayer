@@ -1,0 +1,92 @@
+using System;
+
+namespace Memory_game
+{
+    public class GameSoloPlayer : GameStencil
+    {
+        ScoreBoard statistics;
+        IPlayer player;
+        public override Board board { get; set; }
+
+        public override int move1 { get; set; } = -1;
+        public override int move2 { get; set; }
+        int count;
+
+        public GameSoloPlayer(ITile[] tileArray, IPlayer player)
+        {
+            this.player = player;
+            this.statistics = player.Statistics;
+            this.board = new Board(tileArray);
+        }
+        public override void Game()
+        {
+            for (int i = 0; i < board.printArray.Length; i++)
+            {
+                while (board.printArray[i] != " ")
+                {
+                    FirstMove();
+                    this.count++;
+                }
+            }
+            statistics.PrintScoreBoard(this.count, this.player);
+            statistics.UpdateCount(this.count);
+            this.count = 0;
+            PostGame();
+        }
+        protected override void PostGame()
+        {
+            Console.WriteLine("Spelet är slut! Vad vill du göra nu?\nTryck 1 för att spela igen." +
+                "\nTryck 2 för att avsluta spelet.");
+            int.TryParse(Console.ReadLine(), out int input);
+            switch (input)
+            {
+                case 1:
+                    InitiateGame newGame = new InitiateGame(new IPlayer[] { player });
+                    break;
+                case 2:
+                    Environment.Exit(0);
+                    break;
+                default:
+                    Console.WriteLine("Du har inte angivit ett giltigt alternativ. Försök igen.\n");
+                    PostGame();
+                    break;
+            }
+        }
+        protected override void SecondMove()
+        {
+            this.move2 = getMove();
+            board.ChangeToSymbol(move2);
+            Console.Clear();
+            board.PrintBoard();
+            if (board.printArray[move1] == board.printArray[move2])
+            {
+                board.printArray[move1] = " ";
+                board.printArray[move2] = " ";
+                Console.WriteLine("\nBrickorna matchade, bra jobbat!\n\nTryck enter för att fortsätta.");
+            }
+            else
+            {
+                Console.WriteLine("\nBrickorna matchade inte!\n\nTryck enter för att fortsätta.");
+                board.ChangeToIndex(move1);
+                board.ChangeToIndex(move2);
+            }
+            Console.ReadLine();
+            Console.Clear();
+        }
+        protected override int getMove()
+        {
+            Console.WriteLine("\nAnge vilken bricka du vill vända på!");
+            try
+            {
+                int move = takeUserInput(Console.ReadLine());
+                return move;
+            }
+            catch (ArgumentException ae)
+            {
+                Console.WriteLine(ae.Message);
+                return getMove();
+            } 
+        }
+    } 
+
+}
