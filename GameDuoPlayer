@@ -1,0 +1,115 @@
+using System;
+
+namespace Memory_game
+{
+    public class GameDuoPlayer: GameStencil
+    {
+        ScoreBoard statistics1;
+        ScoreBoard statistics2;
+        IPlayer player1;
+        IPlayer player2;
+        public override Board board { get; set; }
+
+        public override int move1 { get; set; } = -1;
+        public override int move2 { get; set; }
+        int count1;
+        int count2;
+        int turn = 1;
+
+        public GameDuoPlayer(ITile[] tileArray, IPlayer player1, IPlayer player2)
+        {
+            this.player1 = player1;
+            this.player2 = player2;
+            this.statistics1 = player1.Statistics;
+            this.statistics2 = player2.Statistics;
+            this.board = new Board(tileArray);
+        }
+        public override void Game()
+        {
+            for (int i = 0; i < board.printArray.Length; i++)
+            {
+                while (board.printArray[i] != " ")
+                {
+                    FirstMove();
+                }
+            }
+            if (count1 > count2)
+                Console.WriteLine($"Grattis {player1.Name}, du vann!\n{player1.Name} fick {count1} stycken par. {player2.Name} fick {count2} stycken par.");
+            else if (count1 == count2)
+                Console.WriteLine($"Det blev oavgjort! Bra jobbat!");
+            else
+                Console.WriteLine($"Grattis {player2.Name}, du vann!\n{player1.Name} fick {count1} stycken par. {player2.Name} fick {count2} stycken par.");
+            statistics1.UpdateCount(this.count1);
+            statistics2.UpdateCount(this.count2);
+            this.count1 = 0;
+            this.count2 = 0;
+            PostGame();
+        }
+        protected override void PostGame()
+        {
+            Console.WriteLine("\nSpelet är slut! Vad vill du göra nu?\nTryck 1 för att spela igen." +
+                "\nTryck 2 för att avsluta spelet.");
+            int.TryParse(Console.ReadLine(), out int input);
+            switch (input)
+            {
+                case 1:
+                    InitiateGame newGame = new InitiateGame(new IPlayer[] { player1, player2 });
+                    break;
+                case 2:
+                    Environment.Exit(0);
+                    break;
+                default:
+                    Console.WriteLine("Du har inte angivit ett giltigt alternativ. Försök igen.\n");
+                    PostGame();
+                    break;
+            }
+        }
+        protected override void SecondMove()
+        {
+            this.move2 = getMove();
+            board.ChangeToSymbol(move2);
+            Console.Clear();
+            board.PrintBoard();
+            if (board.printArray[move1] == board.printArray[move2])
+            {
+                board.printArray[move1] = " ";
+                board.printArray[move2] = " ";
+                Console.WriteLine("\nBrickorna matchade, bra jobbat!\n\nTryck enter för att fortsätta.");
+                if (this.turn % 2 != 0)
+                    count1++;
+                else
+                    count2++;
+            }
+            else
+            {
+                Console.WriteLine("\nBrickorna matchade inte!\n\nTryck enter för att fortsätta.");
+                board.ChangeToIndex(move1);
+                board.ChangeToIndex(move2);
+                this.turn++;
+            }
+            Console.ReadLine();
+            Console.Clear();
+        }
+        protected override int getMove()
+        {
+            string name; 
+            if (this.turn % 2 != 0)
+                name = player1.Name;
+            else
+                name = player2.Name;
+            Console.WriteLine($"\n{name}, ange vilken bricka du vill vända på!");
+            try
+            {
+                int move = takeUserInput(Console.ReadLine());
+                return move;
+            }
+            catch (ArgumentException ae)
+            {
+                Console.WriteLine(ae.Message);
+                return getMove();
+            }
+        }
+
+    }
+
+}
