@@ -1,0 +1,9 @@
+using System;
+namespace Memory_game
+{
+	public interface ITile
+	{
+		string Symbol { get; init; }
+	}
+}
+
