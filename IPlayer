@@ -1,0 +1,10 @@
+using System;
+namespace Memory_game
+{
+	public interface IPlayer
+	{
+		string Name { get; init; }
+		ScoreBoard Statistics { get; set; }
+	}
+}
+
