@@ -1,0 +1,63 @@
+using System;
+namespace Memory_game
+{
+	public class Introduction
+	{
+		public Introduction()
+		{
+            Console.WriteLine("Välkommen till memory!\n\n\nVid varje drag kommer du får välja två olika brickor att" +
+				" vända på.\nOm brickorna har samma symbol/ord kommer brickorna tas bort.\nOm det är olika symbol/ord kommer " +
+				"brickorna vändas tillbaka.\nDu har vunnit när alla brickrona har tagits bort.\n\n");
+        }
+		public IPlayer[] ChoiceOfGame()
+		{
+            Console.WriteLine("Är ni en eller två spelare? Tryck 1 för en spelare, eller 2 för två spelare.");
+			int.TryParse(Console.ReadLine(), out int numberOfPlayers);
+            switch (numberOfPlayers)
+            {
+                case 1:
+					Console.WriteLine("Ange spelarens namn:");
+					string? playername = Console.ReadLine();
+					if (playername == null || playername == "")
+					{
+						Console.WriteLine("Du måste ange ett namn. Försök igen.\n");
+						return ChoiceOfGame();
+					}
+					else
+						return CreatePlayer(playername);
+				case 2:
+                    Console.WriteLine("Ange första spelarens namn:");
+                    string? playername1 = Console.ReadLine();
+                    if (playername1 == null || playername1 == "")
+                    {
+                        Console.WriteLine("Du måste ange ett namn. Försök igen.\n");
+                        ChoiceOfGame();
+                    }
+                    Console.WriteLine("Ange andra spelarens namn:");
+                    string? playername2 = Console.ReadLine();
+                    if (playername2 == null || playername2 == "")
+                    {
+                        Console.WriteLine("Du måste ange ett namn. Försök igen.\n");
+                        ChoiceOfGame();
+                    }
+					return CreatePlayer(playername1!, playername2!);
+				default:
+					Console.WriteLine("Du har inte angivit rätt alternativ. Försök igen.");
+					return ChoiceOfGame();
+            }
+        }
+		public IPlayer[] CreatePlayer(string playername)
+		{ 
+			Console.Clear();
+			IPlayer[] playerArray = new Player[] { new Player(playername, new ScoreBoard())};
+			return playerArray;
+        }
+		public IPlayer[] CreatePlayer(string playername1, string playername2)
+		{
+			Console.Clear();
+			IPlayer[] playerArray = new Player[] { new Player(playername1, new ScoreBoard()), new Player(playername2, new ScoreBoard()) };
+			return playerArray;
+		}
+	}
+}
+
