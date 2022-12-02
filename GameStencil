@@ -1,0 +1,45 @@
+using System;
+namespace Memory_game
+{
+    /// <summary>
+    /// 
+    /// </summary>
+	public abstract class GameStencil
+	{
+        public abstract Board board { get; set; }
+        public abstract int move1 { get; set; }
+        public abstract int move2 { get; set; }
+
+        public abstract void Game();
+        protected abstract void PostGame();
+        protected virtual void FirstMove()
+        {
+            board.PrintBoard();
+            this.move1 = getMove();
+            Console.Clear();
+            board.ChangeToSymbol(move1);
+            board.PrintBoard();
+            SecondMove();
+        }
+        protected abstract void SecondMove();
+        protected abstract int getMove();
+        protected virtual int takeUserInput(string? input)
+        {
+            bool conversion = int.TryParse(input, out int number);
+            number--;
+            if (input == null || input == "")
+                throw new ArgumentException("Du måste ange en bricka. Försök igen.\n");
+            else if (!conversion)
+                throw new ArgumentException("Du har inte angivet siffra. Försök igen.\n");
+            else if (conversion && number > 11 || number < 0)
+                throw new ArgumentException("Du har inte angivit en giltig bricka. Försök igen.\n");
+            else if (number == this.move1)
+                throw new ArgumentException("Du kan inte välja samma bricka. Försök igen.\n");
+            else if (board.printArray[number] == " ")
+                throw new ArgumentException("Du har valt en tom bricka. Försök igen.\n");
+            return number;
+        }
+    }
+
+}
+
