@@ -1,0 +1,15 @@
+using System;
+
+namespace Memory_game
+{
+    public class Player : IPlayer
+    {
+        public string Name { get; init; }
+        public ScoreBoard Statistics { get; set; }
+        public Player(string name, ScoreBoard statistics)
+        {
+            this.Name = name;
+            this.Statistics = statistics;
+        }
+    }
+}
