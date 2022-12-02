@@ -1,0 +1,88 @@
+using System;
+namespace Memory_game
+{
+	public class TileArray
+	{
+        public RandomTileArray CreateRandomTileArray()
+        {
+            Console.WriteLine("Hur vill du att brickorna på spelplanen ska se ut? Välj ett alternativ:" +
+                "\nTryck 1 för att spela på en förutbestämd spelplan\nTryck 2 för att välja egna ord/symboler på brickorna.");
+            string? input = Console.ReadLine();
+            int.TryParse(input, out int number);
+            switch (number)
+            {
+                case 1:
+                    Console.Clear();
+                    return new RandomTileArray();
+                case 2:
+                    return getArray();
+                default:
+                    Console.WriteLine("Du har inte angivit ett giltigt alternativ. Försök igen.\n");
+                    return CreateRandomTileArray();
+            }
+        }
+        public RandomTileArray CheckArrayLength(string[] stringarray)
+        {
+            int length = stringarray.Length;
+            if (length != 6)
+            {
+                Console.WriteLine("\nDu valde inga eller för få symboler. Vi kommer fylla på med förvalda symboler. Tryck enter för att fortsätta.");
+                Console.ReadLine();
+            }
+            switch(length)
+            {
+                case 1:
+                    return new RandomTileArray(new Tile(stringarray[0]));
+                case 2:
+                    return new RandomTileArray(new Tile(stringarray[0]), new Tile(stringarray[1]));
+                case 3:
+                    return new RandomTileArray(new Tile(stringarray[0]), new Tile(stringarray[1]), new Tile(stringarray[2]));
+                case 4:
+                    return new RandomTileArray(new Tile(stringarray[0]), new Tile(stringarray[1]), new Tile(stringarray[2]), new Tile(stringarray[3]));
+                case 5:
+                    return new RandomTileArray(new Tile(stringarray[0]), new Tile(stringarray[1]), new Tile(stringarray[2]), new Tile(stringarray[3]), new Tile(stringarray[4]));
+                case 6:
+                    return new RandomTileArray(new Tile(stringarray[0]), new Tile(stringarray[1]), new Tile(stringarray[2]), new Tile(stringarray[3]), new Tile(stringarray[4]), new Tile(stringarray[5]));
+                default:
+                    return CheckArrayLength(stringarray);
+            }
+        }
+        RandomTileArray getArray()
+        {
+            try
+            {
+                string[] arrayInput = takeUserInput();
+                return CheckArrayLength(arrayInput);
+            }
+            catch (ArgumentException ae)
+            {
+                Console.WriteLine(ae.Message);
+                return getArray();
+            }
+        }
+        string[] takeUserInput()
+        {
+            Console.WriteLine("\nAnge 6st olika ord/symboler, ange mellanslag mellan orden. Du kan inte välja siffror.");
+            string? inputFromUser = Console.ReadLine();
+            Console.Clear();
+            if (inputFromUser == null || CheckSpace(inputFromUser))
+                throw new ArgumentException("Du måste ange ord eller symboler. Försök igen.\n");
+            else if (inputFromUser.Any(char.IsDigit))
+                throw new ArgumentException("Du kan inte välja siffror. Försök igen.\n");
+            else if (inputFromUser.Split().Length > 6)
+                throw new ArgumentException("Du måste ange färre än 6st ord/symboler. Försök igen.\n");
+            return inputFromUser.Split();
+        }
+
+        public bool CheckSpace(string input)
+        {
+            string[] stringArray= input.Split();
+            for (int i = 0; i < stringArray.Length; i++)
+            {
+                if (stringArray[i] == "")
+                    return true;
+            }
+            return false;
+        }
+    }
+}
