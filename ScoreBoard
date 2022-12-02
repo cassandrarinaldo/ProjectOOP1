@@ -1,0 +1,36 @@
+using System;
+using Memory_game;
+
+namespace Memory_game
+{
+    public class ScoreBoard
+    {
+        public int NewCount { get; set; }
+        public int OldCount { get; set; }
+        public void UpdateCount(int count)
+        {
+            OldCount = NewCount;
+        }
+        public void PrintScoreBoard(int count, IPlayer player)
+        {
+            this.NewCount = count;
+            if (OldCount == 0)
+            {
+                Console.WriteLine($"Bra jobbat {player.Name}! Du använde {NewCount} drag.\n");
+            }
+            else if (NewCount < OldCount)
+            {
+                Console.WriteLine($"Bra jobbat {player.Name}! Du använde färre drag än förra spelet!");
+                Console.WriteLine($"Den här gången använda du {NewCount} drag, i jämförelse med förra gången då du använde {OldCount} drag!\n");
+            }
+            else if (NewCount == OldCount)
+            {
+                Console.WriteLine($"Du använde {NewCount}, vilket är lika många drag som förra gången! Bra jobbat {player.Name}!\n");
+            }
+            else
+            {
+                Console.WriteLine($"Du använde {NewCount} drag, vilket är fler än förra gången, då du använde dig av {OldCount} drag. Bättre lycka nästa gång {player.Name}.\n");
+            }
+        }
+    }
+}
