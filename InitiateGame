@@ -1,0 +1,27 @@
+using System;
+using System.Numerics;
+
+namespace Memory_game
+{
+	public class InitiateGame
+	{
+        RandomTileArray randomTile;
+        GameStencil game;
+
+        public InitiateGame(IPlayer[] player)
+		{
+            randomTile = new TileArray().CreateRandomTileArray();
+            if (player.Length == 1)
+                game = new GameSoloPlayer(randomTile.randomTileArray, player[0]); //kan bytas ut mot ett annat objekt som också ärver av Superklassen, ex spel med flera spelare eller med AI
+            else
+                game = new GameDuoPlayer(randomTile.randomTileArray, player[0], player[1]);
+
+        }
+        public void Initiate()
+        {
+            game.Game();
+        }
+    }
+    
+}
+
