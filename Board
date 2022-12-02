@@ -1,0 +1,37 @@
+using System;
+namespace Memory_game
+{
+	public class Board
+	{
+        public ITile[] tileArrray;
+        public string[] printArray = new string[] { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12" };
+
+        public Board(ITile[] tileArray)
+        {
+            this.tileArrray = tileArray;
+        }
+        public string[] ChangeToSymbol(int indexPosition)
+        {
+            printArray[indexPosition] = tileArrray[indexPosition].Symbol;
+            return printArray;
+        }
+        public string[] ChangeToIndex(int indexPosition)
+        {
+            string index = Convert.ToString(indexPosition + 1);
+            printArray[indexPosition] = index;
+
+            return printArray;
+        }
+        public void PrintBoard()
+        {
+            Console.WriteLine("-------------------------");
+            Console.WriteLine($"|  {printArray[0]}  |  {printArray[1]}  |  {printArray[2]}  |  {printArray[3]}  | ");
+            Console.WriteLine("-------------------------");
+            Console.WriteLine($"|  {printArray[4]}  |  {printArray[5]}  |  {printArray[6]}  |  {printArray[7]}  | ");
+            Console.WriteLine("-------------------------");
+            Console.WriteLine($"|  {printArray[8]}  |  {printArray[9]} |  {printArray[10]} |  {printArray[11]} | ");
+            Console.WriteLine("-------------------------");
+        }
+    }
+}
+
