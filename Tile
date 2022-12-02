@@ -1,0 +1,14 @@
+using System;
+namespace Memory_game
+{
+	public class Tile: ITile
+	{
+		public string Symbol { get; init; }
+
+		public Tile(string text)
+		{
+			this.Symbol = text;
+		}
+	}
+}
+
